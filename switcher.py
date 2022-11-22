@@ -9,4 +9,8 @@ match choise:
         report.generate_excel(data[:5], data[5:])
     case 'Статистика':
         report.generate_image(data)
+<<<<<<< HEAD
 #Изменение 1
+=======
+#Изменение 22
+>>>>>>> develop
