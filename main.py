@@ -9,13 +9,37 @@ import pdfkit
 from jinja2 import Environment, FileSystemLoader
 
 class Salary:
+    """
+    Класс для представления зарплаты
+
+    Attributes:
+        salary_from (int): Нижняя граница вилки оклада
+        salary_to (int): Верхняя граница вилки оклада
+        salary_gross (bool): С учётом налога или нет
+        salary_currency (str): Валюта оклада
+    """
     def __init__(self, salary_from, salary_to, salary_gross, salary_currency):
+        """
+        Инициализирует объект Salary
+
+        Args:
+            salary_from (str or int or float): Нижняя граница вилки оклада
+            salary_to (str or int or float): Верхняя граница вилки оклада
+            salary_gross (bool): С учётом налога или нет
+            salary_currency (str): Валюта оклада
+        """
         self.salary_from = int(float(salary_from))
         self.salary_to = int(float(salary_to))
         self.salary_gross = salary_gross
         self.salary_currency = salary_currency
 
     def convert_to_rub(self):
+        """
+        Конвертирует среднюю зарплату в рубли с помощью словаря currency_to_rub
+
+        Returns:
+            float: Средняя зарплата в рублях
+        """
         return (self.salary_from + self.salary_to) / 2 * self.__currency_to_rub[self.salary_currency]  
 
     __currency_to_rub = {  
@@ -32,14 +56,50 @@ class Salary:
     }       
 
 class DataVacancy:
+    """
+    Класс для представления вакансии
+
+    Attributes:
+        name (str): Название вакансии
+        salary (Salary): Зарплата вакансии
+        area_name (str): Регион вакансии
+        published_at (str): Дата публикации вакансии
+    """
     def __init__(self, name, salary_from, salary_to, salary_currency, area_name, published_at):
+        """
+        Инициализирует объект DataVacancy
+
+        Args:
+            name (str): Название вакансии
+            salary_from (str or int or float): Нижняя граница вилки оклада
+            salary_to (str or int or float): Верхняя граница вилки оклада
+            salary_currency (str): Валюта оклада
+            area_name (str): Регион вакансии
+            published_at (str): Дата публикации вакансии
+        """
         self.name = name
         self.salary = Salary(salary_from, salary_to, False, salary_currency)
         self.area_name = area_name
         self.published_at = published_at
 
 class InputConect:
+    """
+    Класс для представления входных данных
+
+    Attributes:
+
+    """
     def input_data(self):
+        """
+        Returns:
+            job (str): название выбранной вакансии,
+            salary_rub (dict): словарь год - средняя зарплата в рублях,
+            salary_count (dict): словарь год - количество вакансий,
+            job_rub (dict): словарь год - зарплата выбранной вакансии,
+            job_count (dict): словарь год - количество выбранных вакансий ,
+            city_salary (dict): словарь город - зарплата,
+            city_frac (dict): словарь город - доля выбранных вакансий
+        """
         f = input('Введите название файла: ')
 
         job = input('Введите название профессии: ')
@@ -119,25 +179,80 @@ class InputConect:
         return job, salary_rub, salary_count, job_rub, job_count, city_salary, city_frac
 
     def __get_dict(self):
+        """
+        Возвращает пустой словарь с 2007 года по 2022
+
+        Returns:
+            dict: Пустой словарь с 2007 года по 2022
+        """
         return {x: 0 for x in range(2007, 2023)}
 
     def __medium(self, m, x, n):
+        """
+        Возвращает среднее арифметическое ряда чисел
+
+        Args:
+            m (float): Текущая сумма
+            x (int): Прибавляемое число
+            n (int): Количество уже прибавленных чисел
+
+        Returns:
+            float: Среднее арифметическое чисел
+        """
         return (m * n + x) / (n + 1)  
 
     def __sort_city(self, d):
+        """
+        Сортирует города по зарплате и возвращает первые 10 городов
+
+        Args:
+            d (dict): Словарь городов
+
+        Returns:
+            dict: Отсортированный по возрастанию словарь городов и зарплат
+        """
         return dict(sorted(d.items(), key=lambda x: x[1], reverse=True)[:10])
 
     def __round_values(self, d):
+        """
+        Округляет зарплату до целого числа
+
+        Args:
+            d (dict): Словарь городов
+
+        Returns:
+            dict: Словарь городов с округлённой зарплатой
+        """
         return dict(map(lambda x: (x[0], int(x[1])), d.items()))
 
     def __erase_empty(self, d):
+        """
+        Удаляет пустые города в словаре
+
+        Args:
+            d (dict): словарь городов
+
+        Returns:
+            dict: Словарь городов
+        """
         cd = dict(filter(lambda x:x[1], d.items()))
         if len(cd.keys()) == 0:
             cd[2022] = 0
         return cd
         
 class Report:
+    """
+    Класс для представления отчёта
+
+    Attributes:
+        wb (Workbook): Объект для работы с таблицей эксель
+        first_headers (list): Заголовки для первого листа таблицы
+        second_headers (list): Заголовки для второго листа таблицы
+    """
     def __init__(self):
+        """
+        Инициализирует объект Report
+        """
         self.wb = Workbook()
 
         for sheet_name in self.wb.sheetnames:
@@ -156,16 +271,32 @@ class Report:
         ]
 
     def __as_text(self, value):
+        """
+        Проверяет, является ли объект текстом, если нет - то конвертирует его в строку
+        Если невозможно сконвертировать, то возвращает пустую строку
+
+        Args:
+            value (object): объект для проверки
+
+        Returns:
+            str: Конвертируемый в строку объект
+        """
         if value is None:
             return ""
         return str(value)
 
     def __set_size(self):
+        """
+        Задаёт размеры колонок в таблице эксель
+        """
         for column_cells in self.wb.active.columns:
             length = max(len(self.__as_text(cell.value)) for cell in column_cells)
             self.wb.active.column_dimensions[get_column_letter(column_cells[0].column)].width = length + 2
 
     def __make_border(self):
+        """
+        Задаёт обводку для ячеек в таблице эксель
+        """
         for row in self.wb.active.rows:
             for cell in row:
                 cell.border = Border(
@@ -175,6 +306,17 @@ class Report:
                     bottom=Side(style='thin'))
 
     def __make_first_sheet(self, data):
+        """
+        Создаёт первую страницу в эксель и заполняет её
+
+        Args:
+            data list(dict): Список словарей со статистикой по годам:
+                Динамика уровня зарплат по годам
+                Динамика количества вакансий по годам
+                Динамика уровня зарплат по годам для выбранной профессии
+                Динамика количества вакансий по годам для выбранной профессии
+
+        """
         self.wb.active = self.wb['Статистика по годам']
         ws = self.wb.active
         
@@ -201,6 +343,14 @@ class Report:
     ]
 
     def __make_second_sheet(self, data):
+        """
+        Создаёт вторую странциу в эксель и заполняет её
+
+        Args:
+            data list(dict): Список словарей со статистикой по городам
+                Уровень зарплат по городам (в порядке убывания)
+                Доля вакансий по городам (в порядке убывания)
+        """
         self.wb.active = self.wb['Статистика по городам']
         ws = self.wb.active
 
@@ -230,12 +380,28 @@ class Report:
         self.wb.active = self.wb['Статистика по годам']
 
     def generate_excel(self, data1, data2):
+        """
+        Генерирует файл эксель со статистикой
+
+        Args:
+            data1 list(dict): Словари для заполнения первой страницы эксель
+            data2 list(dict): Словари для заполнения второй страницы эксель
+        """
         self.__make_first_sheet(data1)
         self.__make_second_sheet(data2)
 
         self.wb.save('report.xlsx')
 
     def __make_salary_year(self, job, data1, data2, ax):
+        """
+        Создаёт первый график "Уровень зарплат по годам"
+
+        Args:
+            job (str): Название вакансии
+            data1 (dict): Статистика по всем вакансиям
+            data2 (dict): Статистика по выбранной вакансии
+            ax (subplot): Объект, куда рисовать график
+        """
         labels = list(data1.keys())
         average = list(data1.values())
         jobs = list(data2.values())
@@ -253,6 +419,16 @@ class Report:
         ax.tick_params(axis='both', labelsize=8)
 
     def __make_counts_year(self, job, data1, data2, ax):
+        """
+        Создаёт второй график "Количество вакансий по годам"
+
+        Args:
+            job (str): Название вакансии
+            data1 (dict): Статистика по всем вакансиям
+            data2 (dict): Статистика по выбранной вакансии
+            ax (subplot): Объект, куда рисовать график
+        """
+
         labels = list(data1.keys())
         counts = list(data1.values())
         jobs = list(data2.values())
@@ -270,6 +446,13 @@ class Report:
         ax.tick_params(axis='both', labelsize=8)
 
     def __make_salary_city(self, data, ax):
+        """
+        Создаёт третий график "Уровень зарплат по городам"
+
+        Args:
+            data (dict): Словарь зарплат по городам
+            ax (subplot): Объект, куда рисовать график
+        """
         sep = lambda x: x.replace(' ', '\n').replace('-', '\n')
 
         cities = list(map(sep, data.keys()))[::-1]
@@ -282,6 +465,13 @@ class Report:
         ax.tick_params(axis='x', labelsize=8)
 
     def __make_jobs_count(self, data, ax):
+        """
+        Создаёт четвёртый график "Доля вакансий по городам"
+
+        Args:
+            data (dict): Словарь долей вакансий по городам
+            ax (subplot): Объект, куда рисовать график
+        """
         x = list(data.values())
         x.append(1 - sum(x))
         cities = list(data.keys()) + ['Другие']
@@ -290,6 +480,18 @@ class Report:
         ax.pie(x, labels = cities, textprops={'fontsize': 6}, startangle=90)
 
     def generate_image(self, data):
+        """
+        Создаёт графическую статистику
+
+        Args:
+            data list(dict) - Список словарей со статистикой
+                Динамика уровня зарплат по годам
+                Динамика количества вакансий по годам
+                Динамика уровня зарплат по годам для выбранной профессии
+                Динамика количества вакансий по годам для выбранной профессии
+                Уровень зарплат по городам (в порядке убывания)
+                Доля вакансий по городам (в порядке убывания)
+        """
         fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(nrows=2, ncols=2)
 
         self.__make_salary_year(data[0], data[1], data[3], ax1)
@@ -301,6 +503,18 @@ class Report:
         fig.savefig('graph.png')
         
     def generate_pdf(self, data):
+        """
+        Создаёт pdf статистику
+
+        Args:
+            data list(dict) - Список словарей со статистикой
+                Динамика уровня зарплат по годам
+                Динамика количества вакансий по годам
+                Динамика уровня зарплат по годам для выбранной профессии
+                Динамика количества вакансий по годам для выбранной профессии
+                Уровень зарплат по городам (в порядке убывания)
+                Доля вакансий по городам (в порядке убывания)
+        """
         job = data[0]
         image_file = "graph.png"
 
