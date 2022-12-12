@@ -526,7 +526,3 @@ class Report:
         config = pdfkit.configuration(wkhtmltopdf=r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe')
         pdfkit.from_string(pdf_template, 'report.pdf', configuration=config)
 
-ic = InputConect()
-data = ic.input_data()
-
-data = list(data)

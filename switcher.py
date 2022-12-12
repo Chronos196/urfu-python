@@ -1,8 +1,12 @@
-from main import *
+from main import Report, InputConect
 
 choise = input('Что вывести?')
 
 report = Report()
+
+ic = InputConect()
+data = ic.input_data()
+data = list(data)
 
 match choise:
     case 'Вакансии':
