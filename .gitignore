@@ -9,6 +9,8 @@ venv.bak/
 
 # csv
 lot.csv
+.csv
+new.csv
 
 #pycharm
 .idea
