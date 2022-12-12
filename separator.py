@@ -2,6 +2,12 @@ import csv
 import os
 
 def separate(file_str):
+    """
+        Разделяет csv файл на csv файлы по годам 
+
+        Args:
+            file_str (str): ссылка на файл
+    """
     with open(file_str, encoding='utf-8-sig') as file:
         reader = csv.reader(file)
         head = []
