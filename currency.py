@@ -20,4 +20,6 @@ for (m, y) in prTupes:
     
     df = df.append(pd.DataFrame(info, [f"{y}-{m}"]))
 
+df.index.rename('date', inplace=True)
+
 df.to_csv('currencies_df.csv')
