@@ -21,3 +21,7 @@
 [2020.csv](https://github.com/Chronos196/urfu-python/files/10207563/2020.csv)
 [2021.csv](https://github.com/Chronos196/urfu-python/files/10207564/2021.csv)
 [2022.csv](https://github.com/Chronos196/urfu-python/files/10207565/2022.csv)
+
+## 3.3.1
+![Снимок](https://user-images.githubusercontent.com/65082041/207317249-b4e3089c-e053-4a4a-8265-b9ec3fcb01e6.PNG)
+[currencies_df.csv](https://github.com/Chronos196/urfu-python/files/10217806/currencies_df.csv)
