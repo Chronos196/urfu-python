@@ -25,3 +25,6 @@
 ## 3.3.1
 ![Снимок](https://user-images.githubusercontent.com/65082041/207317249-b4e3089c-e053-4a4a-8265-b9ec3fcb01e6.PNG)
 [currencies_df.csv](https://github.com/Chronos196/urfu-python/files/10219361/currencies_df.csv)
+
+# 3.3.2
+[convert_100.csv](https://github.com/Chronos196/urfu-python/files/10268355/convert_100.csv)
