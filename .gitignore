@@ -14,5 +14,7 @@ new.csv
 years
 vacancies_dif_currencies.csv
 currencies_df.csv
+convert.csv
+convert_100.csv
 #pycharm
 .idea
